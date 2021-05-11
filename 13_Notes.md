@@ -608,3 +608,380 @@ After you push your changes to the branch, Sadhana will show you how to plot dat
 
 NOTE
 For more information, see the Leaflet documentation on the polyline() function (Links to an external site.).
+
+# Basil and Sadhana are ecstatic that you can add multiple locations to a map. This will be highly beneficial when you need to add the earthquake data to a map. Now, Sadhana will walk you through how to add lines to a map.
+On our Leaflet map, we can plot coordinates to create lines between locations, like transportation routes.
+
+Before we plot lines on a map, let's create a new branch called "Mapping_Lines" that has the following folder structure:
+
+Mapping_Lines
+index.html
+static
+css
+style.css
+js
+config.js
+logic.js
+Copy the necessary folders and files from one of your Mapping_Mulitple_Points branches and add them to the Mapping_Lines folder.
+
+Map a Single Line
+Adding lines to a map requires that the coordinates for the starting and ending points be a one-dimensional array with two elements: latitude and longitude. To illustrate how lines are mapped, let's map the airline route from Los Angeles to San Francisco. Mapping airline routes will help us understand how tectonic plate data is added to a map.
+
+The starting point for our line will be the Los Angeles International Airport (LAX), with the coordinates [33.9416, -118.4085]. The ending point for our line will be the San Francisco International Airport (SFO), with the coordinates [37.6213, -122.3790].
+
+When we create a line in Leaflet, the starting and ending points and all coordinates along the route need to be in an array. We can assign the array to the line variable like this:
+
+// Coordinates for each point to be used in the line.
+let line = [
+  [33.9416, -118.4085],
+  [37.6213, -122.3790]
+];
+Let's edit our logic.js file to create a line from LAX to SFO.
+
+First, change the coordinates for the center of the map to somewhere between LAX and SFO by adding [36.1733, -120.1794] in the setView() method.
+Change the zoom level in the setView() method to 7.
+Add the code above for our line below the map variable for the center of the map.
+Lastly, create a line on a map using the Leaflet polyline() function. Add the following line of code after the line variable:
+// Create a polyline using the line coordinates and make the line red.
+L.polyline(line, {
+  color: "red"
+}).addTo(map);
+In the polyline() function, we pass the line coordinates and the key-value pair color: "red" to make the line red.
+
+Save the logic.js file with the changes. It should look like the following:
+
+The logic.js file edited with code to create a line between two
+points.
+
+When you open the index.html file in your browser, your map should have a red line between LAX and SFO.
+
+The OpenStreetMap shows a red line from LAX to SFO.
+
+Now we'll add a few more stops on our airline route.
+
+Map Multiple Lines
+Let's edit the logic.js file and add two more airport stops to our line variable: Salt Lake City International Airport (SLC) and Seattle-Tacoma International Airport (SEA). Follow these steps: 
+
+Edit the line variable in the logic.js file so that it includes the two new sets of coordinates.
+
+// Coordinates for each point to be used in the polyline.
+let line = [
+  [33.9416, -118.4085],
+  [37.6213, -122.3790],
+  [40.7899, -111.9791],
+  [47.4502, -122.3088]
+];
+Make the line yellow by editing the value for the "color" key in the polyline() function to yellow.
+
+// Create a polyline using the line coordinates and make the line black.
+L.polyline(line, {
+   color: "yellow"
+}).addTo(map);
+Change the map style to "satellite-streets-v11."
+
+Finally, change the center of the map to SFO and change the zoom to 5 so that we can see the line.
+
+// Create the map object with center at the San Francisco airport.
+let map = L.map('mapid').setView([37.6213, -122.3790], 5);
+After you save the logic.js file and open the index.html file in your browser, your map should look like the following, showing the route from LAX, SFO, SLC, and SEA:
+
+The OpenStreetMap shows a yellow line joining LAX-SFO-SLC-SEA on a Satellite Streets map.
+
+SKILL DRILL
+Edit your logic.js to create an airline route from SFO to John F. Kennedy International Airport (JFK) with two stops, Austin-Bergstrom International Airport (AUS) and Toronto Pearson International Airport (YYZ). Make the route a blue dashed line, with a weight of 4 and opacity of 0.5 on the light map.
+
+Hint: You'll need to find the coordinates for some of these airports.
+
+Bonus: Add your city or another city as a stopping point.
+
+Your map should look similar to the following:
+
+The OpenStreetMap shows a blue dashed line from SFO to JFK with two stops, AUS and YYZ, on the light map.
+
+Great job on mapping routes on your map!
+
+ADD/COMMIT/PUSH
+Add, commit, and push your changes to your Mapping_Lines branch. Don't delete the branch so that others can use it to learn how to map lines.
+
+After you push your changes to the branch, Sadhana will show you how to plot data from a GeoJSON (.json) file.
+
+NOTE
+For more information, see the Leaflet documentation on the polyline() function (Links to an external site.).
+
+# 13.5.2
+Map GeoJSON Point Type
+You meet with Basil and Sadhana to discuss your project. Basil informs you that the earthquake data you'll map will have the geometry type Point. Basil thinks it would be a good idea to learn to parse GeoJSON data that is similar to the earthquake data.
+Sadhana wants you to practice mapping GeoJSON data that she will give you to add to your logic.js file. This will be a good introduction on learning how to access the data from a JSON file.
+
+Before we map any data, let's create a new branch called "Mapping_GeoJSON_Points" and create the following folder structure:
+
+Mapping_GeoJSON_Points
+index.html
+static
+css
+style.css
+js
+config.js
+logic.js
+Copy the necessary folders and files from one of your previous branches and add them to the Mapping_GeoJSON_Points folder.
+
+Map a GeoJSON Point
+First, we'll add single point on our map using GeoJSON data. The following GeoJSON data is a FeatureCollection object that has properties and geometry for the San Francisco Airport:
+
+// Add GeoJSON data.
+let sanFranAirport =
+{"type":"FeatureCollection","features":[{
+    "type":"Feature",
+    "properties":{
+        "id":"3469",
+        "name":"San Francisco International Airport",
+        "city":"San Francisco",
+        "country":"United States",
+        "faa":"SFO",
+        "icao":"KSFO",
+        "alt":"13",
+        "tz-offset":"-8",
+        "dst":"A",
+        "tz":"America/Los_Angeles"},
+        "geometry":{
+            "type":"Point",
+            "coordinates":[-122.375,37.61899948120117]}}
+]};
+Since we are going to add the San Francisco Airport to our map, let's change the center to the San Francisco Airport. Add the following code to our logic.js file to create the center of the map at the airport with a zoom level of "10."
+
+// Create the map object with center at the San Francisco airport.
+let map = L.map('mapid').setView([37.5, -122.5], 10);
+In the GeoJSON example (Links to an external site.) given on the Leaflet page, we can see that the simple GeoJSON feature is similar to our sanFranAirport.
+
+The Leaflet page provides an example of the GeoJSON
+feature.
+
+GeoJSON objects are added to the map through a GeoJSON layer, L.geoJSON(). In "The GeoJSON Layer" section, it says to create the GeoJSON layer and add it to our map. We can use the following code to do that:
+
+L.geoJSON(geojsonFeature).addTo(map);
+Let's edit this GeoJSON layer as follows:
+
+// Grabbing our GeoJSON data.
+L.geoJSON(sanFranAirport).addTo(map);
+Also, add it to our logic.js file below the GeoJSON airport data and above the tileLayer()method. After you save the logic.js file, it should look like the following:
+
+The logic.js file reflects our changing the center and zoom level of
+the map, adding the GeoJSON data, and getting the GeoJSON
+data.
+
+NOTE
+Please note that the coordinates appear in reverse order [-122.375, 37.61899948120117], compared to their order in the setView() method. This is because the GeoJSON data coordinates are set with the first parameter as X (longitude) and the second parameter as Y (latitude), as documented in the GeoJSON Standard. (Links to an external site.) The L.geoJSON()layer reverses the coordinates to plot them on the map.
+
+Open the index.html file in your browser. Your map should have a marker at SFO.
+
+The OpenStreetMap shows a marker on
+SFO.
+
+Later in this module we'll be using a URL to access a larger GeoJSON dataset to plot more points.
+
+Bind a Popup to the Marker
+REWIND
+To display data on a map with a popup marker, we have to bind the marker with the GeoJSON layer, L.geoJSON(), using a callback function.
+
+Our options to add data to a marker are to use the pointToLayer or onEachFeature callback functions. With either of these functions, we can add data to a map from each GeoJSON object. The major difference between the two functions is that the pointToLayer callback function adds markers to a map, whereas the onEachFeature callback function allows you to add styling and bind data to a popup marker.
+
+Let's look at these two functions more closely.
+
+The pointToLayer Function
+For the pointToLayer callback function, the basic syntax for adding functionality to a marker follows:
+
+L.geoJson(data, {
+    pointToLayer: function(feature, latlng) {
+      return L.marker(latlng);
+     }
+});
+Let's break down what is happening in the L.geoJSON() layer:
+
+We add two arguments: the data and the pointToLayer callback function.
+The data will be our sanFranAirport data.
+For the pointToLayer callback function, we are first going to call a function() where we pass each GeoJSON feature as feature, and its latitude and longitude as latlng.
+Then we add a marker for each feature with a latitude and longitude in the pointToLayer callback function argument by using return L.marker(latlng).
+
+
+Even though we have a marker on the previous map, let's edit our logic.js file to add a marker using the pointToLayer function and add data to a popup marker.
+
+First, let's edit the logic.js file to add the pointToLayer callback function to the L.geoJSON() layer. To better understand what is passed with the feature argument in the function(), we will add feature in the console.log()function. Edit your L.geoJSON() layer code to look like the following:
+
+// Grabbing our GeoJSON data.
+L.geoJson(sanFranAirport, {
+    // We turn each feature into a marker on the map.
+    pointToLayer: function(feature, latlng) {
+      console.log(feature);
+      return L.marker(latlng);
+    }
+
+  }).addTo(map);
+Save your logic.js file and open the index.html file in your browser. The map should look the same as it did before the edits. However, if we open the console on our developer tools, we will see that the feature is the JavaScript object geometry and properties of our GeoJSON object.
+
+The Chrome console shows the JavaScript objects for the feature in the
+pointToLayer callback
+function.
+
+Now, we'll add the data in the JavaScript objects to a popup marker.
+
+REWIND
+The properties in each JavaScript object can be accessed using the dot notation.
+
+
+
+To add a popup marker, we need to use the bindPopup() method to the pointToLayer callback function. This will add a popup marker for each object in our GeoJSON data even though we only have one object in our data, SFO.
+
+Let's add the city to the popup marker. In our logic.js file, after the return L.marker(latlng) in our L.geoJSON() layer, add the following code on the next line:
+
+.bindPopup("<h2>" + feature.properties.city + "</h2>")
+Using the dot notation, we can traverse through the JSON object to get the city by using feature.properties.city. Now, your logic.js file with L.geoJSON() layer should look like the following:
+
+Use the pointToLayer function in the logic.js file to add a popup
+marker to the
+map.
+
+Our map should look like the following, where a marker, when clicked, shows a city name:
+
+The OpenStreetMap shows a popup marker for SFO with the city
+name.
+
+SKILL DRILL
+Edit your logic.js to create a popup marker for San Francisco Airport on a night preview navigation map. When you click on the popup, it will display the city, state, and the name of the airport.
+
+Your map should look like the following:
+
+The OpenStreetMap shows a popup marker for SFO with the city and
+state names appearing in the popup on a dark
+map.
+
+The onEachFeature Function
+When we use the onEachFeature callback function we can add a popup marker for each feature and add data from the properties of the JavaScript object. The basic syntax for adding functionality to a marker follows:
+
+L.geoJson(data, {
+    onEachFeature: function(feature, layer) {
+      layer.bindPopup();
+     }
+});
+Let's break down what is happening in the L.geoJSON() layer:
+
+First, we add two arguments: the data and the onEachFeature callback function.
+The data will be our sanFranAirport data.
+With the onEachFeature callback function we are first going to call an anonymous function, function(), where we pass each GeoJSON feature as feature, and any properties to the second argument, layer.
+Let's edit our logic.js file to add a popup marker using the onEachFeature function. First, edit the logic.js file to add the onEachFeature callback function to the L.geoJSON() layer. To see what is passed with the layer argument in the anonymous function(), we'll pass layer in the console.log()function. Edit your L.geoJSON() layer code to look like the following:
+
+Use the onEachFeature function in the logic.js file to add a popup
+marker to the
+map.
+
+When we open our index.html file, the map will display a popup marker for SFO. When we open the console on our DevTools, we'll see that the layer returns many JavaScript methods that can be accessed and used, including the geometry and properties of our GeoJSON object.
+
+The Chrome console shows the JavaScript methods
+available.
+
+SKILL DRILL
+Edit your logic.js to create a popup marker for the San Francisco Airport on the outdoor map. When you click on the popup, it will display the airport code and name of the airport.
+
+Your map should look like the following:
+
+The OpenStreetMap shows a popup marker for SFO, with the airport
+code and name in the popup
+marker.
+
+Great job on adding GeoJSON data to your map!
+
+NOTE
+For more information, see the Leaflet documentation on the L.geoJSON() layer. (Links to an external site.).
+
+Next, we'll map multiple point type geometry from a JSON file.
+
+# 13.5.3
+Map Multiple GeoJSON Points
+Now that you have a handle on how to map GeoJSON point type and add data to a popup marker, Basil and Sadhana want you to fetch GeoJSON data from a URL. After all, this is how GeoJSON data is usually accessed, and this is how you will access the earthquake data.
+When mapping points, lines, and polygons, the data we use is accessed from a URL because this data is usually inaccessible for download or maybe too large to store on your computer and add as an external file.
+
+Download the majorAirports.json file and put it on the Mapping_Earthquakes repository.
+
+Download majorAirports.json (Links to an external site.)
+
+Using the URL for the majorAirports.json file in your GitHub repository, we'll add multiple points onto a map.
+
+When you click on the majorAirports.json file on GitHub, you should see an OpenStreetMap populated with major airports. Our map will look similar to this after we are done.
+
+Launch the majorAirport.json file for a view of all major
+airports.
+
+Click the Raw button and the GeoJSON data will be loaded in the browser.
+
+Click the Raw button to extract the GeoJSON data from the
+majorAirport.json
+file.
+
+If the file size is large, it could take awhile to load on the page. Once it loads, it should look like the following:
+
+Open the majorAirports.json file in the Chrome
+browser.
+
+To begin adding the data to the map, first we need to read the external majorAirports.json file.
+
+REWIND
+To read an external .json file, we need to use the d3.json() method. To use the d3.json() method, we need to have the <script src="https://d3js.org/d3.v5.min.js"></script> file in the index.html page.
+
+Open the index.html file, and in the <head> section above the CSS link, add the following D3.js library file script:
+
+<!-- d3 JavaScript -->
+<script src="https://d3js.org/d3.v5.min.js"></script>
+The <head> section of your index.html file should look like the following:
+
+The index.html file includes the leaflet.css link, the d3 JavaScript,
+and our CSS link in the head
+section.
+
+Next, we'll edit the logic.js file.
+
+Change the geographical center of the map to the geographical center of the Earth and set the zoom level as follows:
+
+// Create the map object with center and zoom level.
+let map = L.map('mapid').setView([30, 30], 2);
+Next, we'll access the majorAirports.json file on GitHub with the following airportData variable. Your URL may be different, but it should begin with https://raw.githubusercontent.com.
+
+Add the following code after your tileLayer() method:
+
+// Accessing the airport GeoJSON URL
+let airportData = "https://raw.githubusercontent.com/<GitHub_name>/Mapping_Earthquakes/main/majorAirports.json";
+NOTE
+Having the tileLayer() method before accessing large datasets ensures that the map gets loaded before the data is added to it.
+
+Next, we'll add the d3.json() method, which returns a promise with the then() method and the anonymous function().
+
+Inside the d3.json() method we'll add the airportData variable.
+Inside the anonymous function() we'll add the data parameter, which references the airportData.
+We'll pass this data to the L.geoJSON() layer and then it'll be added to the map with addTo(map).
+// Grabbing our GeoJSON data.
+d3.json(airportData).then(function(data) {
+    console.log(data);
+  // Creating a GeoJSON layer with the retrieved data.
+  L.geoJson(data).addTo(map);
+});
+Your logic.js file should look like the following:
+
+The logic.js file includes code for accessing the airport.code and
+adding a popup marker to the map using the pointToLayer
+function.
+
+Let's see how our map looks now. Open your index.html file in your browser using the command python -m http.server—just to be sure that the data is accessible through the Python server.
+
+Your map should look like the following:
+
+The OpenStreetMap shows markers for airports in the majorAirports.json
+file.
+
+SKILL DRILL
+Edit your L.geoJson() layer to add a popup marker that displays all airports' codes and names.
+
+Your map should look like the following: 
+
+The OpenStreetMap shows popup markers listing all airports' codes
+and
+names.
+
+Great job on adding multiple-point type GeoJSON data to your map. Next, Sadhana is going to show you how to add another map to the index.html file so you can toggle between two different maps.
