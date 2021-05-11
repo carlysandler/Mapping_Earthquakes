@@ -1,3 +1,8 @@
+# Ignore the config.js file.
+config.js
+
+# Ignore Module notes file
+13_Notes.md
 # Compiled class file
 *.class
 
