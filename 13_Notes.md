@@ -984,4 +984,104 @@ The OpenStreetMap shows popup markers listing all airports' codes
 and
 names.
 
-Great job on adding multiple-point type GeoJSON data to your map. Next, Sadhana is going to show you how to add another map to the index.html file so you can toggle between two different maps.
+Great job on adding multiple-point type GeoJSON data to your map. Next, Sadhana is going to show you how to add another map to the index.html file so you can toggle between two different maps. 
+
+# 13.5.4
+Add Multiple Maps
+Before Sadhana shows you how to map GeoJSON LineString data, she's going to walk you through adding another map so that you can toggle between maps to visualize the data. One of the features you'll be working on for the earthquake data is different map styles, which will allow individuals to choose how they want to visualize the data.
+Adding another map to showcase the data is a nice feature for a map. Most mobile apps with a mapping service use two different styles, or layers: a satellite layer and a dark layer. This makes the app visually appealing and brings functionality to the map.
+
+To create two map choices, we'll edit the logic.js file for mapping the major airports without the popup markers. We'll move some code to make it more readable, and we'll add more code to the logic.js file.
+
+To add another map, we'll use the Leaflet Layers Control (see the documentation (Links to an external site.)). The Layers Control allows us to control which layers, or styles, we'll see on our map. For this task, we'll work with the streets and dark layers.
+
+First, we'll add another tileLayer() to create a dark map. If you don't have the tileLayer() code for the dark map, add the following code block below the code for the streets map.
+
+// We create the dark view tile layer that will be an option for our map.
+let dark = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    accessToken: API_KEY
+});
+Don't add the addTo(map) at the end of your streets or dark tileLayer() code. We'll add it later.
+
+At this point, your logic.js file should look like the following:
+
+The logic.js file has two variables for two different map
+styles.
+
+Next, we'll add both map variables to a new variable, baseMaps. This variable will be used as our base layer, which we'll reference later.
+
+After the code for the dark map, add the following variable to reference the base layer:
+
+// Create a base layer that holds both maps.
+let baseMaps = {
+  Street: streets,
+  Dark: dark
+};
+In the base layer code, the Street and Dark keys set the text, which we'll see in the index.html file, while the corresponding values reference the tile layers. Street and Dark can be used to toggle between styles in the index.html file and will look like the following: The baseMaps shows the Street and Dark
+options.
+
+Modify the map object to change the center and zoom level, and add the base layer with the default map. For the map object, we won't use the setView() method; instead, we'll apply the alternative method that we used earlier in this module.
+
+REWIND
+An alternative to using the setView()method is to modify each attribute in the map object using the curly braces notation as follows:
+
+// Create the map object with a center and zoom level.
+let map = L.map("mapid", {
+  center: [40.7, -94.5],
+  zoom: 4
+});
+Add the following code after the base layer code:
+
+// Create the map object with center, zoom level and default layer.
+let map = L.map('mapid', {
+    center: [30, 30],
+    zoom: 2,
+    layers: [streets]
+})
+To complete the code for the map layers, use the Leaflet control.layers, which will control the layers we'll see on the map. Add the following code below the map object:
+
+// Pass our map layers into our layers control and add the layers control to the map.
+L.control.layers(baseMaps).addTo(map);
+When creating the Layers Control, the argument passed, baseMaps, is the base layer object, which will allow the two different map styles to be shown on the index.html file. The Layers Control will look like the following before it is clicked to show the Street and Dark options:
+
+The layers control will give us options for our
+maps.
+
+Your logic.js file should look like the following:
+
+The logic.js file includes code for the two map styles, the base
+layer, the map object, and the Layers
+Control.
+
+Finally, add the airportData variable to the d3.json() method as shown below:
+
+Add the code to access the GeoJSON data and parse the
+data.
+
+Save the logic.js file and open index.html in your browser. Your map should look like the following with a Layers Control in the top right corner of the map:
+
+The OpenStreetMap shows airport markers with a layers control in the
+top right
+corner.
+
+When we hover over the Layers Control, the map options are shown.
+
+The OpenStreetMap shows airport markers with options for Street and
+Dark layers in the top right
+corner.
+
+SKILL DRILL
+Edit your L.geoJson() layer to add a popup marker that displays all airports' codes and names for both the Street and Dark layers.
+
+Your map should look like the following: 
+
+The OpenStreetMap shows airport popup markers with the airports'
+codes and names and options for Street and Dark
+layers.
+
+Great job adding multiple-point type GeoJSON data to your map! Next, Sadhana will show you how to add map LineString type GeoJSON data.
+
+ADD/COMMIT/PUSH
+Add, commit, and push your changes to your Mapping_GeoJSON_Points branch. Don't delete the branch so that others can use it to learn how to map GeoJSON points.
