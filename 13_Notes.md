@@ -985,3 +985,80 @@ and
 names.
 
 Great job on adding multiple-point type GeoJSON data to your map. Next, Sadhana is going to show you how to add another map to the index.html file so you can toggle between two different maps.
+
+# 13.6.1
+Add Earthquake Data to a Map
+Now that you know how to access GeoJSON data, parse the data, and add it to a map, Sadhana would like you to map all recorded earthquakes in the past seven days. Once you get the data, you'll add some features to the map to showcase the severity of earthquakes for viewers. 
+As before, we need to set up a folder structure for our project in a new branch. Create a branch called "Earthquakes_past7days." Copy the folders and files from one of your previous branches and add them to the Earthquakes_past7days folder.
+
+
+
+First, Sadhana wants you to rename the logic.js file to logicStep1.js. This way, each step has its own logic.js file that can be used by other interns in the future.
+
+Now we'll edit our logicStep1.js file to create a map with all recorded earthquakes from the past seven days.
+
+First, apply the streets and satelliteStreets map styles used for the GeoJSON polygon mapping. Change the text for the maps on the base layer to read as "Streets" and "Satellite" to look like the following:
+
+// Create a base layer that holds both maps.
+let baseMaps = {
+  "Streets": streets,
+  "Satellite": satelliteStreets
+};
+Change the center of our map to the geographic center of the United States using the coordinates [39.5, -98.5], with a zoom level of 3 and default layer streets. Our logicStep1.js file should look like the following:
+
+The logic.js file shows the necessary edits for the earthquake map
+styles.
+
+Add the USGS URL for earthquake data by following these steps:
+
+From the USGS home page (Links to an external site.) click the Earthquakes (Links to an external site.) link:
+
+USGS Home page
+
+Next, click the Real-time Notifications, Feeds, and Web Services (Links to an external site.) link:
+
+Real-time Notifications, Feeds, and Web Services
+
+Scroll down until you see "GeoJSON Summary Feed".
+
+Click the GeoJSON Summary Feed (Links to an external site.) link:GeoJSON Summary
+Feeds
+
+On the right-hand side, click the All Earthquakes link under the "Past 7 Days" heading:
+
+Click on the All Earthquakes link under "Past 7
+Days."
+
+Nice work! The GeoJSON data will launch in your browser:
+
+The summary shows the recorded earthquakes for the past 7
+days.
+
+
+
+If we look closer at the geometry object, we'll see an additional data point in the coordinates object, 3.91, which is the depth of the earthquake in kilometers:
+
+View the type of geometry and
+coordinates.
+
+NOTE
+For more information on earthquake depth and other terms, see the Event Terms (Links to an external site.).
+
+Copy the URL for the earthquake JSON data recorded for the past seven days, and add it in place of the previous URL in the d3.json() method. It should look like the following:
+
+// Retrieve the earthquake GeoJSON data.
+d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson").then(function(data) {
+  // Creating a GeoJSON layer with the retrieved data.
+  L.geoJson(data).addTo(map);
+});
+After saving the logicStep1.js file and opening the index.html file in your browser, the map should look like the following. Make sure you are referring to the correct logic file in your index.html file:
+
+The Streets map with the markers for the earthquakes for the past
+7-days.
+
+Great job adding the earthquake data to our maps!
+
+ADD/COMMIT/PUSH
+Add, commit, and push your changes to your Earthquakes_past7days branch.
+
+Let's make this data visually interesting by changing the marker to a circle with a radius representing the earthquake's magnitude, and then we'll style each earthquake data point.
