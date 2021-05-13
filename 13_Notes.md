@@ -1062,3 +1062,219 @@ ADD/COMMIT/PUSH
 Add, commit, and push your changes to your Earthquakes_past7days branch.
 
 Let's make this data visually interesting by changing the marker to a circle with a radius representing the earthquake's magnitude, and then we'll style each earthquake data point.
+
+# 13.6.2
+Add Style to the Earthquake Data
+As a first step in making the earthquake data more visually appealing, Sadhana would like you to add some styling to the earthquake data and vary the radius of each earthquake based on the magnitude.
+After styling and modifying the radius of the circle for each earthquake's magnitude, our map should look similar to the following map:
+
+The Street map marks each recorded earthquake with a light-orange
+circle and a diameter representing the earthquake's
+magnitude.
+
+Before we write the code to create this map, make a copy of the logicStep1.js file and name it logicStep2.js. Now let's edit the file.
+
+First, we'll change the basic marker to a circleMarker by using the pointToLayer function.
+
+REWIND
+For the pointToLayer callback function, the basic syntax for adding functionality to a marker is:
+
+L.geoJson(data, {
+pointToLayer: function(feature, latlng) {
+return L.marker(latlng);
+}
+});
+For our purposes, we'll use circleMarker instead of marker in the above code. Edit your GeoJSON layer code to look like the following:
+
+// Creating a GeoJSON layer with the retrieved data.
+  L.geoJson(data, {
+
+// We turn each feature into a circleMarker on the map.
+
+pointToLayer: function(feature, latlng) {
+            console.log(data);
+            return L.circleMarker(latlng);
+        },
+    }).addTo(map);
+});
+Save the file and let's see what the data looks like on the map. The index.html file should look like the following:
+
+The Street map marks the recorded earthquakes with a
+circle.
+
+Next, we'll create a style for each earthquake by adjusting the line color, fill color, opacity, fill opacity, stroke, weight, and radius.
+
+REWIND
+When we defined the line style for the nonstop flight routes from Toronto, we created a style variable like the following:
+
+let myStyle = {
+color: "#ffffa1",
+weight: 2
+}
+We'll create a function styleInfo(), which will contain all the style parameters for each earthquake plotted. Within this function, we'll create a getRadius() function to calculate the radius for each earthquake.
+
+Add the following function styleInfo() inside the d3.json() method:
+
+// This function returns the style data for each of the earthquakes we plot on
+// the map. We pass the magnitude of the earthquake into a function
+// to calculate the radius.
+function styleInfo(feature) {
+  return {
+    opacity: 1,
+    fillOpacity: 1,
+    fillColor: "#ffae42",
+    color: "#000000",
+    radius: getRadius(),
+    stroke: true,
+    weight: 0.5
+  };
+}
+Let's review the style we're creating for each earthquake:
+
+In the styleInfo() function, we passed the argument feature to reference each object's features.
+The opacity and fillOpacity are set at 1, the stroke is "true," and the weight is 0.5.
+The fillColor is light orange, and the color is "#000000" (black).
+The getRadius() function retrieves the earthquake's magnitude. Next, we'll create the getRadius() function to calculate the radius of the circle from the magnitude.
+
+
+In the getRadius() function for our styleInfo() function, add the following code to retrieve the earthquake's magnitude: feature.properties.mag.
+
+Next, we'll create the getRadius() function. Add the following code below the styleInfo() function:
+
+// This function determines the radius of the earthquake marker based on its magnitude.
+// Earthquakes with a magnitude of 0 will be plotted with a radius of 1.
+function getRadius(magnitude) {
+  if (magnitude === 0) {
+    return 1;
+  }
+  return magnitude * 4;
+}
+In the getRadius() function, we'll pass the magnitude argument that will reference the feature.properties.mag in the styleInfo() function. Then we'll use a conditional statement that sets the magnitude to 1 if the magnitude of the earthquake in the JSON file is 0 so that the earthquake is plotted on the map. If the magnitude is greater than 0, then the magnitude is multiplied by 4.
+
+Now, that we created our style, let's add it to the map.
+
+
+
+To add style to the L.geoJson() layer, the style key will be assigned to the styleInfo function we created. Make sure the code for your L.geoJson() layer looks like the following:
+
+// Creating a GeoJSON layer with the retrieved data.
+  L.geoJson(data, {
+
+// We turn each feature into a circleMarker on the map.
+
+pointToLayer: function(feature, latlng) {
+            console.log(data);
+            return L.circleMarker(latlng);
+        },
+      // We set the style for each circleMarker using our styleInfo function.
+    style: styleInfo
+    }).addTo(map);
+});
+When you save your logicStep2.js file and open  index.html in your browser, your map will look like the following:
+
+The Street map marks each recorded earthquake with a light-orange
+circle and diameter representing the earthquake's
+magnitude.
+
+Great job styling each earthquake on our map!
+
+ADD/COMMIT/PUSH
+Add, commit, and push your changes to your Earthquakes_past7days branch.
+
+Let's continue making the earthquake data visually appealing by styling colors to represent magnitudes as well as by adding informational popups.
+
+# 13.6.3
+Add Color and a Popup for Each Earthquake
+Sadhana thinks that the size of the earthquake data based on magnitude looks great, but it's hard to tell the difference between earthquakes within the same area. As you toss around ideas to make this data more accessible to the viewer, you come up with the idea to color-code the earthquakes based on magnitude. You aren't quite sure how to do this yet, but you know that it should be possible based on your experience with JavaScript thus far. Basil loves the idea, so you get back to coding to figure out how to make it happen. And while you're working on changing the color code for magnitude, Basil and Sadhana suggest that you add the magnitude and location as a popup for each earthquake.
+After we're done adding a color range for the magnitude and a popup for each earthquake, our map should look like the following:
+
+The Street map marks each recorded earthquake with a circle and
+diameter in a color representing a different magnitude. Popups show
+magnitude and location for each
+earthquake.
+
+Before we write the code to create this map, make a copy of the logicStep2.js file and name it logicStep3.js. Now let's edit the file.
+
+First, we'll create a fill-color range for the magnitude. In the styleInfo() function, our fillColor was set with fillColor: "#ffae42". We'll replace the hexadecimal color code with the function getColor(). Inside the parentheses, we'll add the dot notation code to get the magnitude as we did for the getRadius() function, since we'll change the color of each earthquake marker based on the magnitude.
+
+Add the getColor(feature.properties.mag) function for the fillColorso that our styleInfo() function looks like the following:
+
+// This function returns the style data for each of the earthquakes we plot on
+// the map. We pass the magnitude of the earthquake into two separate functions
+// to calculate the color and radius.
+function styleInfo(feature) {
+  return {
+    opacity: 1,
+    fillOpacity: 1,
+    fillColor: getColor(feature.properties.mag),
+    color: "#000000",
+    radius: getRadius(feature.properties.mag),
+    stroke: true,
+    weight: 0.5
+  };
+}
+Now we need to write code for the getColor() function to change the marker's color based on the magnitude. For example, if the magnitude is greater than 5, it will be a certain color, if the magnitude is greater than 4, it will be a different color, and so on.
+
+
+
+For the getColor() function, we'll write a conditional expression with logical operators for the magnitudes. Add the following getColor() function below the styleInfo() function and above the getRadius() function. Sadhana suggests using the following colors for the magnitudes since they'll be visible on the Satellite map:
+
+// This function determines the color of the circle based on the magnitude of the earthquake.
+function getColor(magnitude) {
+  if (magnitude > 5) {
+    return "#ea2c2c";
+  }
+  if (magnitude > 4) {
+    return "#ea822c";
+  }
+  if (magnitude > 3) {
+    return "#ee9c00";
+  }
+  if (magnitude > 2) {
+    return "#eecc00";
+  }
+  if (magnitude > 1) {
+    return "#d4ee00";
+  }
+  return "#98ee00";
+}
+Let's save our logicStep3.js file and open the index.html file in the browser to confirm our code is working. When we select the dark map, our map should look similar to the following map:
+
+The dark Satellite map marks each recorded earthquake with a circle
+diameter and color representing different
+magnitudes.
+
+Now we need to edit the GeoJSON layer code to add the popup for the magnitude and location.
+
+
+
+In the geoJson layer, we'll add the onEachFeature function to add a popup for each circle marker. Edit the L.geoJson() layer code to include the onEachFeature function with the bindPopup() method:
+
+// Creating a GeoJSON layer with the retrieved data.
+L.geoJson(data, {
+    // We turn each feature into a circleMarker on the map.
+    pointToLayer: function(feature, latlng) {
+        console.log(data);
+        return L.circleMarker(latlng);
+      },
+    // We set the style for each circleMarker using our styleInfo function.
+  style: styleInfo,
+    // We create a popup for each circleMarker to display the magnitude and
+    //  location of the earthquake after the marker has been created and styled.
+    onEachFeature: function(feature, layer) {
+    layer.bindPopup("Magnitude: " + feature.properties.mag + "<br>Location: " + feature.properties.place);
+  }
+}).addTo(map);
+When you save the logicStep3.js file and open your index.html file in your browser, the Satellite map option will look like the following:
+
+The dark Satellite map marks each recorded earthquake with a circle
+diameter and color representing different magnitudes. Popups show the
+magnitude and location for each
+earthquake
+
+Great job on adding color and a popup marker to each earthquake!
+
+ADD/COMMIT/PUSH
+Add, commit, and push your changes to your Earthquakes_past7days branch.
+
+Next, Sadhana will show you how to add the earthquake data as an overlay to the tile layer so that the data can be turned on and off by the viewer. 
