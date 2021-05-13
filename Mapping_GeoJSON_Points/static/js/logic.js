@@ -20,6 +20,8 @@ let baseMaps = {
 	Street: streets,
 	Dark: dark
   };
+};
+
 
 // Create the map object with center, zoom level and default layer.
 let map = L.map('mapid', {
@@ -28,7 +30,11 @@ let map = L.map('mapid', {
 	layers: [streets]
 });
 
+
 // Pass our map layers into our layers control and add the layers control to the map.
+L.control.layers(baseMaps).addTo(map);
+
+// Pass our map layers into our layers control and add the layers control to the map
 L.control.layers(baseMaps).addTo(map);
 
 // Accessing the airport GeoJSON URL
@@ -39,8 +45,9 @@ d3.json(airportData).then(function (data) {
 	console.log(data);
 	// Creating a GeoJSON layer with the retrieved data.
 	L.geoJson(data, {
+		// We turn each feature into a marker on the map
 		onEachFeature: function (feature, layer) {
-			layer.bindPopup("<h2>Airport code: " + feature.properties.faa + "</h2> <hr style=height: 0px; border: none; border-top: 1px solid grey;> <h3>" + feature.properties.name + "</h3>");
+			layer.bindPopup("<h2>Airport code: " + feature.properties.faa + "</h2>" + "<hr style=height: 0px; border: none; border-top: 1px solid grey;> <h3>Airport name: " + feature.properties.name + "</h3>")
 		}
 	}).addTo(map);
 });
