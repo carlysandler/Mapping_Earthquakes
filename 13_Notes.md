@@ -1358,3 +1358,102 @@ ADD/COMMIT/PUSH
 Add, commit, and push your changes to your Earthquakes_past7days branch.
 
 Sadhana loves the map, but she thinks having a legend to indicate what magnitude is represented by each color would be helpful when viewing the map.
+
+# 13.6.5
+Add a Legend to the Map
+There is one final piece to add to the map: a legend for the color range of the earthquakes. Basil and Sadhana think a legend will provide information needed for the colors of the earthquakes to make sense to the viewer without having to click on each marker.
+After we add a legend, our earthquake map should look similar to the following map, with the legend at the bottom right of the map:
+
+The Street map marks each recorded earthquake with a circle diameter
+and color representing different magnitudes. Popups show the magnitude
+and location for each earthquake, with a legend in the bottom
+right.
+
+Sadhana tells you that we can use the Leaflet choropleth examples page (Links to an external site.) to help us write the code for the legend. On the choropleth examples page (Links to an external site.), scroll down to the "Custom Legend Control" section:
+
+The "Custom Legend Control" section provides code to make a legend for
+a
+map.
+
+Before we write the code to create this map, make a copy of the logicStep4.js file and name it logicStep5.js. Now let's edit the file.
+
+On the choropleth examples page, copy the code for the Custom Legend Control and paste it below the L.geoJSON() layer, where we add the earthquake layer to the map, earthquakes.addTo(map). Now, we'll edit the legend control object to suit our needs.
+
+First, edit the code for the Leaflet control() object to look like the following. With this code, we'll place the legend at the indicated position—the bottom right:
+
+// Create a legend control object.
+let legend = L.control({
+  position: "bottomright"
+});
+Next, remove the argument "map" from the legend function to look like the following:
+
+// Then add all the details for the legend.
+legend.onAdd = function() {
+  let div = L.DomUtil.create("div", "info legend");
+};
+With this code, we're going to add a legend to the map with legend.onAdd. The legend will be added to a div element on the index.html file using the DomUtil utility function.
+
+Next, we're going to change the grades array in the Leaflet documentation to a magnitudes array, and we'll add a colors array that holds the colors for our magnitudes. Add the following code inside our legend.onAdd function:
+
+const magnitudes = [0, 1, 2, 3, 4, 5];
+const colors = [
+  "#98ee00",
+  "#d4ee00",
+  "#eecc00",
+  "#ee9c00",
+  "#ea822c",
+  "#ea2c2c"
+];
+The final piece is to edit the for loop. The for loop will add the color choices from our colors array as a small box for the color of earthquakes and place the text of the magnitude range next to the box. Edit the for loop code to look like the following:
+
+// Looping through our intervals to generate a label with a colored square for each interval.
+   for (var i = 0; i < magnitudes.length; i++) {
+     console.log(colors[i]);
+     div.innerHTML +=
+       "<i style='background: " + colors[i] + "'></i> " +
+       magnitudes[i] + (magnitudes[i + 1] ? "&ndash;" + magnitudes[i + 1] + "<br>" : "+");
+  }
+   return div;
+ };
+
+ legend.addTo(map);
+Let's review what's happening in this for loop:
+
+After we iterate through the magnitudes, we'll add the color and text to the div element using div.innerHTML +=.
+For each iteration, we'll add a color from the colors array by styling the background of an <i> tag with color options.
+Next, we'll add the interval between earthquake magnitudes for our colors with the following code: magnitudes[i] + (magnitudes[i + 1] ? "&ndash;" + magnitudes[i + 1] + "<br>" : "+").
+This code is quite complex. For a deeper explanation of this code, watch the following video:
+
+
+
+NOTE
+If that seemed a bit complex, that's good! Encountering, unpacking, and using other people's complex code is a critical part of being a developer.
+
+The last thing we need to do is style the legend using CSS. Below the JavaScript code for the legend is the CSS code. Copy the CSS code and add it our style.css file:
+
+Refer to the Custom Legend Control CSS code to add style to the
+legend.
+
+We won't edit the <i> tag of the .legend class (.legend i) in the style.css file, but let's edit our .legend class to create some padding around the legend, add a white background, and add a border radius. Edit your .legend class to look like the following:
+
+.legend {
+  padding: 10px;
+  line-height: 18px;
+  color: #555;
+  background-color: #fff;
+  border-radius: 5px;
+}
+Our style.css file should now look like the following:
+
+The style.css file now shares attributes of the Custom Legend Control
+CSS
+code.
+
+Save your logicStep5.js and style.css files. When you open index.html in your browser, your map should have a legend on the bottom right:
+
+The Street map marks each recorded earthquake with a circle diameter
+and color representing different magnitudes.It includes popups showing
+magnitude and location and a legend in the bottom
+right.
+
+Congratulations on completing your earthquake map!
