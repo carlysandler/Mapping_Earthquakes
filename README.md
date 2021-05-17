@@ -13,10 +13,8 @@ The purpose of this project is to visually show the differences between the magn
 	
 ---
 
-#### Final Map 
-Screenshot: `index.html`
-
-![alt text](challenge_complete.png "Title")
+#### Final Map (Screenshot: `index.html`)
+![challege_complete](https://user-images.githubusercontent.com/77628698/118418746-b3e68000-b687-11eb-8f3f-59b8cb4d253c.png)
 
 ---
 
@@ -27,4 +25,4 @@ Screenshot: `index.html`
 - Add multiple map layers to geographical maps using Leaflet control plugins to add user interface controls.
 - Use JavaScript ES6 functions to add GeoJSON data, features, and interactivity to maps.
 - Render maps on a local server.
----
+
